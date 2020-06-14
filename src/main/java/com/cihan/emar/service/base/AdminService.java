@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component;
 @Component
 public interface AdminService {
 
-    AdminDTO save(AdminDTO adminDTO);
+    void save(AdminDTO adminDTO);
 
 }

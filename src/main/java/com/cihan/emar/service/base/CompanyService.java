@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component;
 @Component
 public interface CompanyService {
 
-    CompanyDTO save(CompanyDTO companyDTO);
+    void save(CompanyDTO companyDTO);
 
 }

@@ -17,8 +17,8 @@ public class AdminServiceImpl implements AdminService {
     private AdminMapper adminMapper;
 
     @Override
-    public AdminDTO save(AdminDTO adminDTO) {
-        return adminMapper.toAdminDTO(adminRepository.save(adminMapper.toAdmin(adminDTO)));
+    public void save(AdminDTO adminDTO) {
+        adminMapper.toAdminDTO(adminRepository.save(adminMapper.toAdmin(adminDTO)));
     }
 
 }

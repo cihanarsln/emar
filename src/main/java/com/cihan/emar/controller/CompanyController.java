@@ -3,6 +3,8 @@ package com.cihan.emar.controller;
 import com.cihan.emar.dto.CompanyDTO;
 import com.cihan.emar.service.base.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/emar/company")
@@ -14,8 +16,9 @@ public class CompanyController {
 
     @PostMapping
     @ResponseBody
-    public CompanyDTO save(@RequestBody CompanyDTO companyDTO){
-        return companyService.save(companyDTO);
+    public ResponseEntity<Object> save(@RequestBody CompanyDTO companyDTO){
+        companyService.save(companyDTO);
+        return new ResponseEntity<>("Company is created successfully", HttpStatus.CREATED);
     }
 
 }

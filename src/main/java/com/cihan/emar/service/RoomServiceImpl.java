@@ -17,7 +17,7 @@ public class RoomServiceImpl implements RoomService {
     private RoomMapper roomMapper;
 
     @Override
-    public RoomDTO save(RoomDTO roomDTO) {
-        return roomMapper.toRoomDTO(roomRepository.save(roomMapper.toRoom(roomDTO)));
+    public void save(RoomDTO roomDTO) {
+        roomMapper.toRoomDTO(roomRepository.save(roomMapper.toRoom(roomDTO)));
     }
 }

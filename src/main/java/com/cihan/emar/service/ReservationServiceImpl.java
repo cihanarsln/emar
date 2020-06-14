@@ -30,10 +30,10 @@ public class ReservationServiceImpl implements ReservationService {
     private ReservationMapper reservationMapper;
 
     @Override
-    public ReservationDTO save(ReservationDTO reservationDTO) {
+    public void save(ReservationDTO reservationDTO) {
         validateReservation(reservationDTO);
         validateCost(reservationDTO);
-        return reservationMapper.toReservationDTO(reservationRepository.save(reservationMapper.toReservation(reservationDTO)));
+        reservationMapper.toReservationDTO(reservationRepository.save(reservationMapper.toReservation(reservationDTO)));
     }
 
     // Checks the capacity of meeting room and availability of the company and the meeting room

@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component;
 @Component
 public interface RoomService {
 
-    RoomDTO save(RoomDTO roomDTO);
+    void save(RoomDTO roomDTO);
 
 }

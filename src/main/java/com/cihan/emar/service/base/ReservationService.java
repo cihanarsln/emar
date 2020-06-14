@@ -8,7 +8,7 @@ import java.util.List;
 @Component
 public interface ReservationService {
 
-    ReservationDTO save(ReservationDTO reservationDTO);
+    void save(ReservationDTO reservationDTO);
 
     List<ReservationDTO> findAll();
 
