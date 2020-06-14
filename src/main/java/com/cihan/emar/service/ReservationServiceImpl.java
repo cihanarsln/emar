@@ -1,14 +1,14 @@
 package com.cihan.emar.service;
 
+import com.cihan.emar.dto.CompanyDTO;
 import com.cihan.emar.dto.ReservationDTO;
+import com.cihan.emar.dto.RoomDTO;
 import com.cihan.emar.error.*;
 import com.cihan.emar.mapper.ReservationMapper;
-import com.cihan.emar.model.Company;
-import com.cihan.emar.model.Room;
-import com.cihan.emar.repository.CompanyRepository;
 import com.cihan.emar.repository.ReservationRepository;
-import com.cihan.emar.repository.RoomRepository;
+import com.cihan.emar.service.base.CompanyService;
 import com.cihan.emar.service.base.ReservationService;
+import com.cihan.emar.service.base.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +21,10 @@ public class ReservationServiceImpl implements ReservationService {
     private ReservationRepository reservationRepository;
 
     @Autowired
-    private CompanyRepository companyRepository;
+    private CompanyService companyService;
 
     @Autowired
-    private RoomRepository roomRepository;
+    private RoomService roomService;
 
     @Autowired
     private ReservationMapper reservationMapper;
@@ -36,10 +36,20 @@ public class ReservationServiceImpl implements ReservationService {
         reservationMapper.toReservationDTO(reservationRepository.save(reservationMapper.toReservation(reservationDTO)));
     }
 
+    // Gets room with using roomService
+    private RoomDTO findRoom(long id){
+        return roomService.findById(id).orElseThrow(() -> new NotFoundRecordException(String.format("Can't find a meeting room with id %s", id)));
+    }
+
+    // Gets company with using companyService
+    private CompanyDTO findCompany(long id){
+        return companyService.findById(id).orElseThrow(() -> new NotFoundRecordException(String.format("Can't find a company with id %s", id)));
+    }
+
     // Checks the capacity of meeting room and availability of the company and the meeting room
     private void validateReservation(ReservationDTO reservationDTO){
-        final Room room = roomRepository.findById(reservationDTO.getRoom().getId()).orElseThrow(() -> new NotFoundRecordException(String.format("Can't find a meeting room with id %s", reservationDTO.getRoom().getId())));
-        final Company company = companyRepository.findById(reservationDTO.getCompany().getId()).orElseThrow(() -> new NotFoundRecordException(String.format("Can't find a company with id %s", reservationDTO.getCompany().getId())));
+        final RoomDTO room = findRoom(reservationDTO.getRoom().getId());
+        final CompanyDTO company = findCompany(reservationDTO.getCompany().getId());
         List<ReservationDTO> companyReservations = reservationMapper.toReservationDTOList(reservationRepository.findAllByCompany_Id(company.getId()));
         List<ReservationDTO> roomReservations = reservationMapper.toReservationDTOList(reservationRepository.findAllByRoom_Id(room.getId()));
         if (room.getCapacity()<company.getMemberCount()) {
@@ -70,8 +80,8 @@ public class ReservationServiceImpl implements ReservationService {
 
     // meeting hours * room price + company population * 10
     private float calculateCost(ReservationDTO reservationDTO){
-        final Room room = roomRepository.findById(reservationDTO.getRoom().getId()).orElseThrow(() -> new NotFoundRecordException(String.format("Can't find a meeting room with id %s", reservationDTO.getRoom().getId())));
-        final Company company = companyRepository.findById(reservationDTO.getCompany().getId()).orElseThrow(() -> new NotFoundRecordException(String.format("Can't find a company with id %s", reservationDTO.getCompany().getId())));
+        final RoomDTO room = findRoom(reservationDTO.getRoom().getId());
+        final CompanyDTO company = findCompany(reservationDTO.getCompany().getId());
         long diff = reservationDTO.getEndDate().getTime() - reservationDTO.getStartDate().getTime();
         int hours = Math.round(diff / (1000 * 60 *60));
         float extra = 0;

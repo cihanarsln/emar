@@ -7,8 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/emar/reservation")
 public class ReservationController {
@@ -25,26 +23,26 @@ public class ReservationController {
 
     @GetMapping
     @ResponseBody
-    public List<ReservationDTO> findAll(){
-        return reservationService.findAll();
+    public ResponseEntity<Object> findAll(){
+        return new ResponseEntity<>(reservationService.findAll(), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<Object> deleteById(@RequestParam long id){
         reservationService.deleteById(id);
-        return new ResponseEntity<>(String.format("The reservation has been deleted %s", id), HttpStatus.CREATED);
+        return new ResponseEntity<>(String.format("The reservation has been deleted with id %s", id), HttpStatus.OK);
     }
 
     @GetMapping("/room")
     @ResponseBody
-    public List<ReservationDTO> findByRoom_Id(@RequestParam long id){
-        return reservationService.findAllByRoom_Id(id);
+    public ResponseEntity<Object> findByRoom_Id(@RequestParam long id){
+        return new ResponseEntity<>(reservationService.findAllByRoom_Id(id), HttpStatus.OK);
     }
 
     @GetMapping("/company")
     @ResponseBody
-    public List<ReservationDTO> findByCompany_Id(@RequestParam long id){
-        return reservationService.findAllByCompany_Id(id);
+    public ResponseEntity<Object> findByCompany_Id(@RequestParam long id){
+        return new ResponseEntity<>(reservationService.findAllByCompany_Id(id), HttpStatus.OK);
     }
 
 }
