@@ -10,8 +10,12 @@ public interface ReservationService {
 
     ReservationDTO save(ReservationDTO reservationDTO);
 
-    List<ReservationDTO> findByRoom_Id(long id);
+    List<ReservationDTO> findAll();
 
-    List<ReservationDTO> findByCompany_Id(long id);
+    void deleteById(long id);
+
+    List<ReservationDTO> findAllByRoom_Id(long id);
+
+    List<ReservationDTO> findAllByCompany_Id(long id);
 
 }

@@ -40,8 +40,8 @@ public class ReservationServiceImpl implements ReservationService {
     private void validateReservation(ReservationDTO reservationDTO){
         final Room room = roomRepository.findById(reservationDTO.getRoom().getId()).orElseThrow(() -> new NotFoundRecordException(String.format("Can't find a meeting room with id %s", reservationDTO.getRoom().getId())));
         final Company company = companyRepository.findById(reservationDTO.getCompany().getId()).orElseThrow(() -> new NotFoundRecordException(String.format("Can't find a company with id %s", reservationDTO.getCompany().getId())));
-        List<ReservationDTO> companyReservations = reservationMapper.toReservationDTOList(reservationRepository.findByCompany_Id(reservationDTO.getCompany().getId()));
-        List<ReservationDTO> roomReservations = reservationMapper.toReservationDTOList(reservationRepository.findByRoom_Id(reservationDTO.getRoom().getId()));
+        List<ReservationDTO> companyReservations = reservationMapper.toReservationDTOList(reservationRepository.findAllByCompany_Id(company.getId()));
+        List<ReservationDTO> roomReservations = reservationMapper.toReservationDTOList(reservationRepository.findAllByRoom_Id(room.getId()));
         if (room.getCapacity()<company.getMemberCount()) {
             throw new CapacityExceedException(room.getCapacity());
         }
@@ -50,7 +50,7 @@ public class ReservationServiceImpl implements ReservationService {
         if (checkDate(roomReservations, reservationDTO)) throw new RoomNotAvailableException();
     }
 
-
+    // Checks availability of room or companies between start end end date
     private boolean checkDate(List<ReservationDTO> reservations, ReservationDTO reservationDTO){
         for (ReservationDTO reservation: reservations){
             if (reservation.getStartDate().compareTo(reservationDTO.getStartDate()) * reservationDTO.getStartDate().compareTo(reservation.getEndDate()) > 0 ||
@@ -83,12 +83,23 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ReservationDTO> findByRoom_Id(long id) {
-        return reservationMapper.toReservationDTOList(reservationRepository.findByRoom_Id(id));
+    public List<ReservationDTO> findAll() {
+        return reservationMapper.toReservationDTOList(reservationRepository.findAll());
     }
 
     @Override
-    public List<ReservationDTO> findByCompany_Id(long id) {
-        return reservationMapper.toReservationDTOList(reservationRepository.findByCompany_Id(id));
+    public void deleteById(long id) {
+        reservationRepository.findById(id).orElseThrow(() -> new NotFoundRecordException(String.format("Can't find a reservation with id %s", id)));
+        reservationRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ReservationDTO> findAllByRoom_Id(long id) {
+        return reservationMapper.toReservationDTOList(reservationRepository.findAllByRoom_Id(id));
+    }
+
+    @Override
+    public List<ReservationDTO> findAllByCompany_Id(long id) {
+        return reservationMapper.toReservationDTOList(reservationRepository.findAllByCompany_Id(id));
     }
 }

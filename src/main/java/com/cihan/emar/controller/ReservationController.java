@@ -19,14 +19,24 @@ public class ReservationController {
         return reservationService.save(reservationDTO);
     }
 
+    @GetMapping
+    public List<ReservationDTO> findAll(){
+        return reservationService.findAll();
+    }
+
+    @DeleteMapping("/delete")
+    public void deleteById(@RequestParam long id){
+        reservationService.deleteById(id);
+    }
+
     @GetMapping("/room")
     public List<ReservationDTO> findByRoom_Id(@RequestParam long id){
-        return reservationService.findByRoom_Id(id);
+        return reservationService.findAllByRoom_Id(id);
     }
 
     @GetMapping("/company")
     public List<ReservationDTO> findByCompany_Id(@RequestParam long id){
-        return reservationService.findByCompany_Id(id);
+        return reservationService.findAllByCompany_Id(id);
     }
 
 }
