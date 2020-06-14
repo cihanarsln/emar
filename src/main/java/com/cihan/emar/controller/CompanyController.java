@@ -13,6 +13,7 @@ public class CompanyController {
     private CompanyService companyService;
 
     @PostMapping
+    @ResponseBody
     public CompanyDTO save(@RequestBody CompanyDTO companyDTO){
         return companyService.save(companyDTO);
     }

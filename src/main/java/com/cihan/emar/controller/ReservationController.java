@@ -15,11 +15,13 @@ public class ReservationController {
     private ReservationService reservationService;
 
     @PostMapping
+    @ResponseBody
     public ReservationDTO save(@RequestBody ReservationDTO reservationDTO){
         return reservationService.save(reservationDTO);
     }
 
     @GetMapping
+    @ResponseBody
     public List<ReservationDTO> findAll(){
         return reservationService.findAll();
     }
@@ -30,11 +32,13 @@ public class ReservationController {
     }
 
     @GetMapping("/room")
+    @ResponseBody
     public List<ReservationDTO> findByRoom_Id(@RequestParam long id){
         return reservationService.findAllByRoom_Id(id);
     }
 
     @GetMapping("/company")
+    @ResponseBody
     public List<ReservationDTO> findByCompany_Id(@RequestParam long id){
         return reservationService.findAllByCompany_Id(id);
     }
