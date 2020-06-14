@@ -1,9 +1,7 @@
 package com.cihan.emar.service;
 
 import com.cihan.emar.dto.ReservationDTO;
-import com.cihan.emar.error.CapacityExceedException;
-import com.cihan.emar.error.CompanyAlreadyHasMeetingException;
-import com.cihan.emar.error.RoomNotAvailableException;
+import com.cihan.emar.error.*;
 import com.cihan.emar.mapper.ReservationMapper;
 import com.cihan.emar.model.Company;
 import com.cihan.emar.model.Room;
@@ -34,16 +32,16 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public ReservationDTO save(ReservationDTO reservationDTO) {
         validateReservation(reservationDTO);
-        reservationDTO.setCost(calculateCost(reservationDTO));
+        validateCost(reservationDTO);
         return reservationMapper.toReservationDTO(reservationRepository.save(reservationMapper.toReservation(reservationDTO)));
     }
 
     // Checks the capacity of meeting room and availability of the company and the meeting room
     private void validateReservation(ReservationDTO reservationDTO){
+        final Room room = roomRepository.findById(reservationDTO.getRoom().getId()).orElseThrow(() -> new NotFoundRecordException(String.format("Can't find a meeting room with id %s", reservationDTO.getRoom().getId())));
+        final Company company = companyRepository.findById(reservationDTO.getCompany().getId()).orElseThrow(() -> new NotFoundRecordException(String.format("Can't find a company with id %s", reservationDTO.getCompany().getId())));
         List<ReservationDTO> companyReservations = reservationMapper.toReservationDTOList(reservationRepository.findByCompany_Id(reservationDTO.getCompany().getId()));
         List<ReservationDTO> roomReservations = reservationMapper.toReservationDTOList(reservationRepository.findByRoom_Id(reservationDTO.getRoom().getId()));
-        Room room = roomRepository.getOne(reservationDTO.getRoom().getId());
-        Company company = companyRepository.getOne(reservationDTO.getCompany().getId());
         if (room.getCapacity()<company.getMemberCount()) {
             throw new CapacityExceedException(room.getCapacity());
         }
@@ -65,17 +63,23 @@ public class ReservationServiceImpl implements ReservationService {
         return false;
     }
 
-    // meeting hours * room price + company population * 20
+    // Validate room cost expected and actual(sent)
+    private void validateCost(ReservationDTO reservationDTO){
+        if (reservationDTO.getCost() != calculateCost(reservationDTO)) throw new CostMismatchException();
+    }
+
+    // meeting hours * room price + company population * 10
     private float calculateCost(ReservationDTO reservationDTO){
+        final Room room = roomRepository.findById(reservationDTO.getRoom().getId()).orElseThrow(() -> new NotFoundRecordException(String.format("Can't find a meeting room with id %s", reservationDTO.getRoom().getId())));
+        final Company company = companyRepository.findById(reservationDTO.getCompany().getId()).orElseThrow(() -> new NotFoundRecordException(String.format("Can't find a company with id %s", reservationDTO.getCompany().getId())));
         long diff = reservationDTO.getEndDate().getTime() - reservationDTO.getStartDate().getTime();
         int hours = Math.round(diff / (1000 * 60 *60));
-        float roomPrice = roomRepository.getOne(reservationDTO.getRoom().getId()).getPrice();
         float extra = 0;
         if (reservationDTO.getHasExtra()) {
-            int memberCount = companyRepository.getOne(reservationDTO.getCompany().getId()).getMemberCount();
-            extra += memberCount * 20;
+            int memberCount = company.getMemberCount();
+            extra += memberCount * 10;
         }
-        return roomPrice * hours + extra;
+        return room.getPrice() * hours + extra;
     }
 
     @Override

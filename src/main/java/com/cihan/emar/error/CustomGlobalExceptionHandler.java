@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler({CapacityExceedException.class, CompanyAlreadyHasMeetingException.class, RoomNotAvailableException.class})
+    @ExceptionHandler({CapacityExceedException.class, CompanyAlreadyHasMeetingException.class, RoomNotAvailableException.class, NotFoundRecordException.class, CostMismatchException.class})
     public ResponseEntity<ErrorResponse> customHandleNotFound(Exception ex, WebRequest request) {
 
         ErrorResponse errors = new ErrorResponse();
