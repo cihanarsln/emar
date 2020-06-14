@@ -3,6 +3,8 @@ package com.cihan.emar.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 public class RoomDTO {
@@ -18,5 +20,7 @@ public class RoomDTO {
     private String state;
 
     private float price;
+
+    private Set<AdminDTO> admins;
 
 }

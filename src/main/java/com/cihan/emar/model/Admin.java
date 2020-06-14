@@ -22,7 +22,4 @@ public class Admin {
     @ManyToMany
     private Set<Role> roles;
 
-    @OneToMany
-    private Set<Room> rooms;
-
 }

@@ -16,6 +16,4 @@ public class AdminDTO {
     private String password;
 
     private Set<RoleDTO> roles;
-
-    private Set<RoomDTO> rooms;
 }
