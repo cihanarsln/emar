@@ -1,12 +1,10 @@
 package com.cihan.emar.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.Set;
 
-@Getter
-@Setter
+@Data
 public class AdminDTO {
 
     private long id;
