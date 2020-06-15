@@ -10,6 +10,8 @@ public interface ReservationService {
 
     void save(ReservationDTO reservationDTO);
 
+    ReservationDTO getOne(long id);
+
     List<ReservationDTO> findAll();
 
     void deleteById(long id);

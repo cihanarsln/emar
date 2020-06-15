@@ -37,6 +37,12 @@ public class ReservationServiceImpl implements ReservationService {
         reservationMapper.toReservationDTO(reservationRepository.save(reservationMapper.toReservation(reservationDTO)));
     }
 
+    @Override
+    public ReservationDTO getOne(long id) {
+        reservationRepository.findById(id).orElseThrow(() -> new NotFoundRecordException(String.format("Can't find a reservation with id %s", id)));
+        return reservationMapper.toReservationDTO(reservationRepository.getOne(id));
+    }
+
     // Gets room with using roomService
     private RoomDTO findRoom(long id){
         try {

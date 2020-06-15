@@ -23,11 +23,18 @@ public class ReservationController {
 
     @GetMapping
     @ResponseBody
+    public ResponseEntity<Object> getOne(@RequestParam("id") long id){
+        return new ResponseEntity<>(reservationService.getOne(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    @ResponseBody
     public ResponseEntity<Object> findAll(){
         return new ResponseEntity<>(reservationService.findAll(), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete")
+    @ResponseBody
     public ResponseEntity<Object> deleteById(@RequestParam("id") long id){
         reservationService.deleteById(id);
         return new ResponseEntity<>(String.format("The reservation has been deleted with id %s", id), HttpStatus.OK);
