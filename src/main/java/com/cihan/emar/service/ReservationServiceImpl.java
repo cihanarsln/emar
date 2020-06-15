@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -38,12 +39,20 @@ public class ReservationServiceImpl implements ReservationService {
 
     // Gets room with using roomService
     private RoomDTO findRoom(long id){
-        return roomService.findById(id).orElseThrow(() -> new NotFoundRecordException(String.format("Can't find a meeting room with id %s", id)));
+        try {
+            return roomService.findById(id).get();
+        }catch (NoSuchElementException e){
+            throw new NotFoundRecordException(String.format("Can't find a meeting room with id %s", id));
+        }
     }
 
     // Gets company with using companyService
     private CompanyDTO findCompany(long id){
-        return companyService.findById(id).orElseThrow(() -> new NotFoundRecordException(String.format("Can't find a company with id %s", id)));
+        try{
+            return companyService.findById(id).get();
+        }catch (NoSuchElementException e){
+            throw new NotFoundRecordException(String.format("Can't find a company with id %s", id));
+        }
     }
 
     // Checks the capacity of meeting room and availability of the company and the meeting room
@@ -105,11 +114,13 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public List<ReservationDTO> findAllByRoom_Id(long id) {
+        findRoom(id);
         return reservationMapper.toReservationDTOList(reservationRepository.findAllByRoom_Id(id));
     }
 
     @Override
     public List<ReservationDTO> findAllByCompany_Id(long id) {
+        findCompany(id);
         return reservationMapper.toReservationDTOList(reservationRepository.findAllByCompany_Id(id));
     }
 }

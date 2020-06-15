@@ -1,6 +1,7 @@
 package com.cihan.emar.service;
 
 import com.cihan.emar.dto.RoleDTO;
+import com.cihan.emar.error.UsernameAlreadyUsedException;
 import com.cihan.emar.mapper.RoleMapper;
 import com.cihan.emar.repository.RoleRepository;
 import com.cihan.emar.service.base.RoleService;
@@ -18,6 +19,12 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void save(RoleDTO roleDTO) {
+        checkUsername(roleDTO.getName());
         roleMapper.toRoleDTO(roleRepository.save(roleMapper.toRole(roleDTO)));
     }
+
+    private void checkUsername(String name){
+        if (roleRepository.findByName(name) != null) throw new UsernameAlreadyUsedException();
+    }
+
 }

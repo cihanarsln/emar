@@ -28,20 +28,20 @@ public class ReservationController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Object> deleteById(@RequestParam long id){
+    public ResponseEntity<Object> deleteById(@RequestParam("id") long id){
         reservationService.deleteById(id);
         return new ResponseEntity<>(String.format("The reservation has been deleted with id %s", id), HttpStatus.OK);
     }
 
     @GetMapping("/room")
     @ResponseBody
-    public ResponseEntity<Object> findByRoom_Id(@RequestParam long id){
+    public ResponseEntity<Object> findByRoom_Id(@RequestParam("id") long id){
         return new ResponseEntity<>(reservationService.findAllByRoom_Id(id), HttpStatus.OK);
     }
 
     @GetMapping("/company")
     @ResponseBody
-    public ResponseEntity<Object> findByCompany_Id(@RequestParam long id){
+    public ResponseEntity<Object> findByCompany_Id(@RequestParam("id") long id){
         return new ResponseEntity<>(reservationService.findAllByCompany_Id(id), HttpStatus.OK);
     }
 

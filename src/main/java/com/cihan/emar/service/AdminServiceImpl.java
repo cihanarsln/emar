@@ -1,6 +1,7 @@
 package com.cihan.emar.service;
 
 import com.cihan.emar.dto.AdminDTO;
+import com.cihan.emar.error.UsernameAlreadyUsedException;
 import com.cihan.emar.mapper.AdminMapper;
 import com.cihan.emar.repository.AdminRepository;
 import com.cihan.emar.service.base.AdminService;
@@ -18,7 +19,11 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void save(AdminDTO adminDTO) {
+        checkUsername(adminDTO.getUsername());
         adminMapper.toAdminDTO(adminRepository.save(adminMapper.toAdmin(adminDTO)));
     }
 
+    private void checkUsername(String username){
+        if (adminRepository.findByUsername(username) != null) throw new UsernameAlreadyUsedException();
+    }
 }

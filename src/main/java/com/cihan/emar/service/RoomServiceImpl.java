@@ -1,6 +1,7 @@
 package com.cihan.emar.service;
 
 import com.cihan.emar.dto.RoomDTO;
+import com.cihan.emar.error.UsernameAlreadyUsedException;
 import com.cihan.emar.mapper.RoomMapper;
 import com.cihan.emar.repository.RoomRepository;
 import com.cihan.emar.service.base.RoomService;
@@ -20,7 +21,12 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public void save(RoomDTO roomDTO) {
+        checkUsername(roomDTO.getName());
         roomMapper.toRoomDTO(roomRepository.save(roomMapper.toRoom(roomDTO)));
+    }
+
+    private void checkUsername(String name){
+        if (roomRepository.findByName(name) != null) throw new UsernameAlreadyUsedException();
     }
 
     @Override

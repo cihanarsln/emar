@@ -1,6 +1,7 @@
 package com.cihan.emar.service;
 
 import com.cihan.emar.dto.CompanyDTO;
+import com.cihan.emar.error.UsernameAlreadyUsedException;
 import com.cihan.emar.mapper.CompanyMapper;
 import com.cihan.emar.repository.CompanyRepository;
 import com.cihan.emar.service.base.CompanyService;
@@ -20,7 +21,12 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public void save(CompanyDTO companyDTO) {
+        checkUsername(companyDTO.getName());
         companyMapper.toCompanyDTO(companyRepository.save(companyMapper.toCompany(companyDTO)));
+    }
+
+    private void checkUsername(String username){
+        if (companyRepository.findByName(username) != null) throw new UsernameAlreadyUsedException();
     }
 
     @Override
