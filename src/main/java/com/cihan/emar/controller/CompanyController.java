@@ -21,4 +21,10 @@ public class CompanyController {
         return new ResponseEntity<>("Company is created successfully", HttpStatus.CREATED);
     }
 
+    @GetMapping("/all")
+    @ResponseBody
+    public ResponseEntity<Object> findAll(){
+        return new ResponseEntity<>(companyService.findAll(), HttpStatus.CREATED);
+    }
+
 }

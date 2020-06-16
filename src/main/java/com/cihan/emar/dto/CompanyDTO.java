@@ -15,8 +15,6 @@ public class CompanyDTO {
 
     private String mail;
 
-    private String password;
-
     private String city;
 
     private int memberCount;

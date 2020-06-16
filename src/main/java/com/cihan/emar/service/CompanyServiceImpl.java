@@ -8,6 +8,7 @@ import com.cihan.emar.service.base.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,6 +35,11 @@ public class CompanyServiceImpl implements CompanyService {
         CompanyDTO companyDTO = companyMapper.toCompanyDTO(companyRepository.findById(id).get());
         Optional<CompanyDTO> optionalCompanyDTO = Optional.of(companyDTO);
         return optionalCompanyDTO;
+    }
+
+    @Override
+    public List<CompanyDTO> findAll() {
+        return companyMapper.toCompanyDTOList(companyRepository.findAll());
     }
 
 }
