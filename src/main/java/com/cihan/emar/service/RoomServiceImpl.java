@@ -8,6 +8,7 @@ import com.cihan.emar.service.base.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,11 +22,11 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public void save(RoomDTO roomDTO) {
-        checkUsername(roomDTO.getName());
+        checkName(roomDTO.getName());
         roomMapper.toRoomDTO(roomRepository.save(roomMapper.toRoom(roomDTO)));
     }
 
-    private void checkUsername(String name){
+    private void checkName(String name){
         if (roomRepository.findByName(name) != null) throw new UsernameAlreadyUsedException();
     }
 
@@ -34,5 +35,10 @@ public class RoomServiceImpl implements RoomService {
         RoomDTO roomDTO = roomMapper.toRoomDTO(roomRepository.findById(id).get());
         Optional<RoomDTO> optionalRoomDTO = Optional.of(roomDTO);
         return optionalRoomDTO;
+    }
+
+    @Override
+    public List<RoomDTO> findAll() {
+        return roomMapper.toRoomDTOList(roomRepository.findAll());
     }
 }

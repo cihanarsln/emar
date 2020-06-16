@@ -21,4 +21,10 @@ public class RoomController {
         return new ResponseEntity<>("Meeting Room is created successfully", HttpStatus.CREATED);
     }
 
+    @GetMapping("/all")
+    @ResponseBody
+    public ResponseEntity<Object> findAll(){
+        return new ResponseEntity<>(roomService.findAll(), HttpStatus.OK);
+    }
+
 }

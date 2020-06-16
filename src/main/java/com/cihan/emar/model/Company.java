@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @Data
@@ -26,9 +25,5 @@ public class Company {
     private String city;
 
     private int memberCount;
-
-    @ManyToMany
-    private Set<Role> roles;
-
 
 }

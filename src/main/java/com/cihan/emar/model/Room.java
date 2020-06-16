@@ -22,7 +22,7 @@ public class Room {
 
     private String city;
 
-    private String state;
+    private String district;
 
     private float price;
 
